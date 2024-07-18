@@ -3,7 +3,7 @@ import os
 
 from aiogram import Bot,Dispatcher
 from aiogram.types import Message
-from aiogram.filters import Command
+from aiogram.filters import Command,CommandStart
 
 from api import get_position_in_university
 
@@ -12,11 +12,14 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
+@dp.message(CommandStart())
+async def cmd_start(message: Message):
+    await message.answer('Напиши команду: /position - чтобы узнать на каком я месте')
+
 @dp.message(Command('position'))
 async def cmd_get_position(message: Message):
-
     position, info = get_position_in_university()
-    await message.answer(f"Вы на {position} месте.\n\nМест на бюджет: {info['total_num']}.\n\nНаправление: {info['name']}")
+    await message.answer(f"Иван на {position} месте.\n\nМест на бюджет: {info['total_num']}.\n\nНаправление: {info['name']}")
 
 
 async def main():
